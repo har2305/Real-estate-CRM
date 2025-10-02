@@ -57,4 +57,4 @@ class RegisterAndLoginView(generics.CreateAPIView):
             'access': str(refresh.access_token),
             'refresh': str(refresh),
             'user': UserSerializer(user).data,
-        })
+        }, status=201)

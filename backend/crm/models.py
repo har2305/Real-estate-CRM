@@ -26,6 +26,9 @@ class Lead(models.Model):
     is_active = models.BooleanField(default=True)  # soft delete
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.email})"
     
 class Activity(models.Model):
     TYPE_CHOICES = [
@@ -49,4 +52,4 @@ class Activity(models.Model):
         ordering = ['-activity_date','-created_at']
 
     def __str__(self):
-        return f"{self.activity_type} - {self.title} ({self.lead_id})"
+        return f"{self.activity_type} - {self.title} ({self.lead.id})"

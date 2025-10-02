@@ -12,6 +12,11 @@ class RegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = ('email', 'password', 'first_name', 'last_name')
 
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        return value
+
     def create(self, validated_data):
         email = validated_data['email']
         first_name = validated_data.get('first_name', '')
@@ -48,29 +53,32 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     # Accepts either email or username; returns tokens + user payload
-    def to_internal_value(self, data):
-        # Map email -> username before field-level validation runs
-        payload = dict(data)
-        email = payload.get('email')
-        username = payload.get('username')
-        if email and not username:
-            try:
-                user = User.objects.get(email=email)
-                payload['username'] = user.username
-            except User.DoesNotExist:
-                # Let parent raise the standard invalid credentials error
-                payload['username'] = ""
-        return super().to_internal_value(payload)
-
+    email = serializers.EmailField(required=False)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make username not required since we can use email
+        self.fields['username'].required = False
+    
     def validate(self, attrs):
+        # Handle email-based login
         email = self.initial_data.get('email')
         username = attrs.get('username')
+        
+        # If email is provided but no username, convert email to username
         if email and not username:
             try:
                 user = User.objects.get(email=email)
                 attrs['username'] = user.username
             except User.DoesNotExist:
-                pass  # fall through; super() will raise
+                # Set a dummy username to let parent handle authentication failure
+                attrs['username'] = 'nonexistent@example.com'
+        
+        # Ensure we have a username for the parent validation
+        if not attrs.get('username'):
+            raise serializers.ValidationError("Either username or email is required.")
+        
+        # Call parent validation
         data = super().validate(attrs)
 
         # Attach serialized user

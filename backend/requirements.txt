@@ -1,0 +1,22 @@
+# Django and Core Dependencies
+Django==5.2.6
+djangorestframework==3.16.1
+djangorestframework-simplejwt==5.5.1
+django-cors-headers==4.9.0
+django-filter==25.1
+django-crispy-forms==2.3
+
+# Database
+psycopg2-binary==2.9.10
+
+# Utilities
+python-decouple==3.8
+Pillow==10.4.0
+
+# Development Tools
+django-debug-toolbar==4.4.6
+django-extensions==3.2.3
+
+# Production
+gunicorn==23.0.0
+whitenoise==6.8.2
