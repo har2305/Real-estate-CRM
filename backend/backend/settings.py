@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c3kvw*4o2h-v*t_hs&#kr)wxf)5^=cn@g7rx-r^c#deba_v*q1'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-c3kvw*4o2h-v*t_hs&#kr)wxf)5^=cn@g7rx-r^c#deba_v*q1')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -56,8 +58,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+
+# CORS Settings
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS', 
+    default='http://localhost:5173,http://127.0.0.1:5173'
+).split(',')
+
+# For development, allow all origins
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
@@ -81,11 +93,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///' + str(BASE_DIR / 'db.sqlite3')
+    )
 }
 
 
@@ -123,7 +136,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

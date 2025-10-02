@@ -335,6 +335,10 @@ local_settings.py
 dev_settings.py
 test_settings.py
 
+# Private documentation files
+*SUBMISSION*.md
+*ASSIGNMENT*.md
+
 # Backup files
 *.backup
 *.bak

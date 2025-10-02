@@ -189,7 +189,23 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 
 ## 🚀 Deployment
 
-### Production Setup
+### Quick Deployment (Recommended for Assignment)
+
+**Backend (Render):**
+1. Create PostgreSQL database on [render.com](https://render.com)
+2. Create Web Service with:
+   - Build Command: `./build.sh`
+   - Start Command: `gunicorn backend.wsgi:application`
+   - Environment Variables: `SECRET_KEY`, `DEBUG=False`, `DATABASE_URL`, `CORS_ALLOWED_ORIGINS`
+
+**Frontend (Vercel):**
+1. Import repository to [vercel.com](https://vercel.com)
+2. Set Root Directory: `frontend`
+3. Environment Variable: `VITE_API_URL=https://your-backend.onrender.com/api`
+
+📖 **Detailed deployment guide**: See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
+
+### Production Setup (Manual)
 1. **Set up production database** (PostgreSQL recommended)
 2. **Configure environment variables**
 3. **Set DEBUG=False** in settings
@@ -275,6 +291,17 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Check the [Issues](https://github.com/your-repo/issues) page
 - Review the documentation
 - Contact the development team
+
+## 🌐 Live Demo
+
+### Demo Credentials
+- **Username**: `demo@example.com`
+- **Password**: `demo123456`
+
+### Production URLs
+- **Frontend**: `https://your-frontend.vercel.app`
+- **Backend API**: `https://your-backend.onrender.com/api/`
+- **Admin Panel**: `https://your-backend.onrender.com/admin/`
 
 ## 🎯 Roadmap
 
