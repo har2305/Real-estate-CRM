@@ -12,9 +12,10 @@ class Lead(models.Model):
         ('lost', 'Lost'),
     ]
 
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='leads')  # who owns this lead
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()  # Remove unique=True since multiple users can have same email
     phone = models.CharField(max_length=30, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
     source = models.CharField(max_length=50, blank=True)  # website/referral/zillow/other

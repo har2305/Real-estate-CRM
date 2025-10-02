@@ -39,15 +39,32 @@ export default function Navbar() {
             >
               Leads
             </NavLink>
-            <button
-              onClick={() => {
-                logout();
-                navigate("/login");
-              }}
-              className="bg-rose-600 hover:bg-rose-700 px-3 py-1 rounded text-sm font-medium text-white"
+            <NavLink
+              to="/analytics"
+              className={({ isActive }) => `${linkBase} ${isActive ? active : ""}`}
             >
-              Logout
-            </button>
+              Analytics
+            </NavLink>
+            <NavLink
+              to="/profile"
+              className={({ isActive }) => `${linkBase} ${isActive ? active : ""}`}
+            >
+              Profile
+            </NavLink>
+            <div className="flex items-center gap-2 border-l border-slate-200 pl-3 ml-2">
+              <span className="text-sm text-slate-600">
+                {user.full_name || user.email}
+              </span>
+              <button
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
+                className="bg-rose-600 hover:bg-rose-700 px-3 py-1 rounded text-sm font-medium text-white"
+              >
+                Logout
+              </button>
+            </div>
           </>
         ) : (
           <>

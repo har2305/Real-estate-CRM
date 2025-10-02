@@ -11,6 +11,8 @@ import Dashboard from "./pages/Dashboard";
 import LeadList from "./pages/LeadList";
 import LeadDetail from "./pages/LeadDetail";
 import LeadForm from "./pages/LeadForm";
+import Analytics from "./pages/Analytics";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -30,6 +32,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <Analytics />
                 </ProtectedRoute>
               }
             />
@@ -62,6 +72,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <LeadForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               }
             />

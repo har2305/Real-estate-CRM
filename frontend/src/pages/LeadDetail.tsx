@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../lib/api";
 import { Card, CardContent } from "../components/ui/Card";
-import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
+import StatusBadge from "../components/ui/StatusBadge";
 import type { AxiosError } from "axios";
 
 interface Lead {
@@ -49,7 +49,6 @@ export default function LeadDetail() {
   const [newDate, setNewDate] = useState<string>(new Date().toISOString().slice(0, 16)); // yyyy-MM-ddTHH:mm
   const [newDuration, setNewDuration] = useState<string>("");
   const [saving, setSaving] = useState(false);
-  const [statusSaving, setStatusSaving] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -65,17 +64,23 @@ export default function LeadDetail() {
 
   useEffect(() => {
     if (!id) return;
-    (async () => {
+    
+    const fetchActivities = async () => {
       setLoadingActivities(true);
       try {
-        const res = await api.get<Activity[]>(`/leads/${id}/activities/`);
-        setActivities(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        // keep on page; show inline later
+        const response = await api.get(`/leads/${id}/activities/`);
+        // Handle both paginated and direct array responses
+        const activitiesData = response.data.results || response.data || [];
+        setActivities(Array.isArray(activitiesData) ? activitiesData : []);
+      } catch (error) {
+        console.error('Error loading activities:', error);
+        setActivities([]);
       } finally {
         setLoadingActivities(false);
       }
-    })();
+    };
+
+    fetchActivities();
   }, [id]);
 
   const handleDelete = async () => {
@@ -133,21 +138,19 @@ export default function LeadDetail() {
                   <div className="text-sm text-slate-600">{lead.phone ?? "-"}</div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge className="capitalize">{lead.status ?? "new"}</Badge>
+                  <StatusBadge status={lead.status ?? "new"} />
                   <select
                     className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm"
                     value={lead.status ?? "new"}
                     onChange={async (e) => {
                       if (!id) return;
                       const newStatus = e.target.value;
-                      setStatusSaving(true);
                       try {
                         await api.patch(`/leads/${id}/`, { status: newStatus });
                         setLead((prev) => (prev ? { ...prev, status: newStatus } : prev));
-                      } catch {
-                        /* noop */
-                      } finally {
-                        setStatusSaving(false);
+                      } catch (err) {
+                        console.error('Failed to update status:', err);
+                        alert('Failed to update status. Please try again.');
                       }
                     }}
                   >
@@ -190,23 +193,32 @@ export default function LeadDetail() {
                 className="grid gap-3"
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  if (!id) return;
+                  if (!id || !newType || !newTitle) return;
+                  
                   setSaving(true);
                   try {
-                    const payload: Partial<Activity> = {
+                    const activityData: any = {
                       activity_type: newType,
                       title: newTitle,
                       notes: newNotes || undefined,
                       activity_date: new Date(newDate).toISOString(),
-                      duration: newType === "call" && newDuration ? Number(newDuration) : undefined,
-                    } as any;
-                    const res = await api.post<Activity>(`/leads/${id}/activities/`, payload);
-                    setActivities((prev) => [res.data, ...prev]);
+                    };
+                    
+                    // Only add duration for call activities
+                    if (newType === "call" && newDuration) {
+                      activityData.duration = Number(newDuration);
+                    }
+                    
+                    const response = await api.post(`/leads/${id}/activities/`, activityData);
+                    setActivities((prev) => [response.data, ...prev]);
+                    
+                    // Clear form after successful submission
                     setNewTitle("");
                     setNewNotes("");
                     setNewDuration("");
-                  } catch (err) {
-                    // could surface error state
+                  } catch (error) {
+                    console.error('Error creating activity:', error);
+                    alert('Failed to create activity. Please try again.');
                   } finally {
                     setSaving(false);
                   }

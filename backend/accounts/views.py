@@ -18,6 +18,23 @@ class MeView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+    
+    def patch(self, request):
+        user = request.user
+        data = request.data
+        
+        # Update user fields
+        if 'first_name' in data:
+            user.first_name = data['first_name']
+        if 'last_name' in data:
+            user.last_name = data['last_name']
+        if 'email' in data:
+            user.email = data['email']
+            user.username = data['email']  # Keep username in sync with email
+        
+        user.save()
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 # Create your views here.
 

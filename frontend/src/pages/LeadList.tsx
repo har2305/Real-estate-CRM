@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import Spinner from "../components/ui/Spinner";
 import Button from "../components/ui/Button";
-import Badge from "../components/ui/Badge";
 import Alert from "../components/ui/Alert";
+import StatusBadge from "../components/ui/StatusBadge";
 import Input from "../components/ui/Input";
 import { Card, CardContent } from "../components/ui/Card";
 import type { AxiosError } from "axios";
@@ -41,10 +41,10 @@ export default function LeadList() {
   const pageSize = 10;
 
   useEffect(() => {
-    (async () => {
+    const fetchLeads = async () => {
       setLoading(true);
       try {
-        const res = await api.get<Paginated<Lead> | Lead[]>("/leads/", {
+        const response = await api.get("/leads/", {
           params: {
             page,
             page_size: pageSize,
@@ -52,46 +52,33 @@ export default function LeadList() {
             status: statusFilter !== "all" ? statusFilter : undefined,
           },
         });
-        const data = res.data as Paginated<Lead> | Lead[];
-        if (Array.isArray(data)) {
-          setLeads(data);
-          setTotal(data.length);
-        } else if (data && Array.isArray((data as Paginated<Lead>).results)) {
-          setLeads((data as Paginated<Lead>).results);
-          setTotal((data as Paginated<Lead>).count);
+        
+        const responseData = response.data as Paginated<Lead> | Lead[];
+        
+        // Handle both paginated and direct array responses
+        if (Array.isArray(responseData)) {
+          setLeads(responseData);
+          setTotal(responseData.length);
+        } else if (responseData && Array.isArray(responseData.results)) {
+          setLeads(responseData.results);
+          setTotal(responseData.count);
         } else {
           setLeads([]);
           setTotal(0);
         }
-      } catch (err) {
-        const ax = err as AxiosError<{ detail?: string }>;
-        setError(ax.response?.data?.detail ?? "Failed to fetch leads");
+      } catch (error) {
+        const axiosError = error as AxiosError<{ detail?: string }>;
+        setError(axiosError.response?.data?.detail ?? "Failed to load leads");
       } finally {
         setLoading(false);
       }
-    })();
+    };
+
+    fetchLeads();
   }, [page, q, statusFilter]);
 
   const filtered = leads; // server-side filtering/search
 
-  const statusClass = (s?: string) => {
-    switch ((s || "new").toLowerCase()) {
-      case "new":
-        return "bg-sky-100 text-sky-700";
-      case "contacted":
-        return "bg-indigo-100 text-indigo-700";
-      case "qualified":
-        return "bg-emerald-100 text-emerald-700";
-      case "negotiation":
-        return "bg-amber-100 text-amber-700";
-      case "closed":
-        return "bg-gray-200 text-gray-800";
-      case "lost":
-        return "bg-rose-100 text-rose-700";
-      default:
-        return "bg-slate-100 text-slate-700";
-    }
-  };
 
   return (
     <div className="max-w-6xl mx-auto mt-10">
@@ -187,7 +174,7 @@ export default function LeadList() {
                   <td className="p-3 text-slate-700">{l.email ?? "-"}</td>
                   <td className="p-3 text-slate-700">{l.phone ?? "-"}</td>
                   <td className="p-3">
-                    <Badge className={`capitalize ${statusClass(l.status)}`}>{l.status ?? "new"}</Badge>
+                    <StatusBadge status={l.status ?? "new"} />
                   </td>
                   <td className="p-3 text-slate-700">
                     {l.budget_min != null || l.budget_max != null

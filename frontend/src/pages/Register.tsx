@@ -9,7 +9,12 @@ import Alert from "../components/ui/Alert";
 import { Card, CardHeader, CardContent } from "../components/ui/Card";
 import type { AxiosError } from "axios";
 
-type FormValues = { email: string; password: string };
+type FormValues = { 
+  email: string; 
+  password: string; 
+  first_name?: string; 
+  last_name?: string; 
+};
 
 export default function Register() {
   const { register: doRegister } = useAuth();
@@ -23,7 +28,7 @@ export default function Register() {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      await doRegister(data.email, data.password);
+      await doRegister(data.email, data.password, data.first_name, data.last_name);
       navigate("/dashboard");
     } catch (err) {
       const ax = err as AxiosError<{ detail?: string }>;
@@ -41,6 +46,29 @@ export default function Register() {
           {errors.root?.message && <Alert className="mb-3">{errors.root.message}</Alert>}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="first_name">First Name</Label>
+                <Input
+                  id="first_name"
+                  type="text"
+                  placeholder="John"
+                  {...register("first_name")}
+                />
+                {errors.first_name && <p className="text-xs text-red-400 mt-1">{errors.first_name.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="last_name">Last Name</Label>
+                <Input
+                  id="last_name"
+                  type="text"
+                  placeholder="Doe"
+                  {...register("last_name")}
+                />
+                {errors.last_name && <p className="text-xs text-red-400 mt-1">{errors.last_name.message}</p>}
+              </div>
+            </div>
+
             <div>
               <Label htmlFor="email">Email</Label>
               <Input

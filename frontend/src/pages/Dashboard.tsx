@@ -8,7 +8,7 @@ export default function Dashboard() {
   return (
     <div className="max-w-3xl mx-auto mt-12">
       <h1 className="text-4xl font-extrabold text-slate-900 mb-2 tracking-tight">
-        Welcome, {user?.email ?? "User"}
+        Welcome, {user?.full_name ?? user?.email ?? "User"}
       </h1>
       <p className="text-slate-600 mb-6">
         Quick links to manage your CRM data.
@@ -29,6 +29,22 @@ export default function Dashboard() {
         >
           <h2 className="text-xl font-semibold mb-2 text-slate-900">Add Lead</h2>
           <p className="text-slate-600">Create a new lead from a form.</p>
+        </Link>
+
+        <Link
+          to="/analytics"
+          className="block rounded-xl border border-slate-200 bg-white p-6 hover:border-indigo-300 shadow"
+        >
+          <h2 className="text-xl font-semibold mb-2 text-slate-900">Analytics</h2>
+          <p className="text-slate-600">View leads statistics and charts.</p>
+        </Link>
+
+        <Link
+          to="/profile"
+          className="block rounded-xl border border-slate-200 bg-white p-6 hover:border-indigo-300 shadow"
+        >
+          <h2 className="text-xl font-semibold mb-2 text-slate-900">Profile</h2>
+          <p className="text-slate-600">Manage your account settings and personal information.</p>
         </Link>
       </div>
     </div>

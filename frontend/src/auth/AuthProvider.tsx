@@ -13,7 +13,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     localStorage.getItem("access")
   );
   const [initializing, setInitializing] = useState(true);
-  const [inactivityTimer, setInactivityTimer] = useState<NodeJS.Timeout | null>(null);
+  const [inactivityTimer, setInactivityTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
 
   const INACTIVITY_TIMEOUT = 10 * 60 * 1000; // 10 minutes
 
@@ -40,10 +40,13 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   }, [token]);
 
   const startInactivityTimer = () => {
+    // Clear any existing timer first
     clearInactivityTimer();
+    
     const timer = setTimeout(() => {
       logout();
     }, INACTIVITY_TIMEOUT);
+    
     setInactivityTimer(timer);
   };
 
@@ -55,25 +58,28 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   };
 
   const resetInactivityTimer = () => {
+    // Only reset timer if user is logged in
     if (token && user) {
       startInactivityTimer();
     }
   };
 
-  // Listen for user activity
+  // Set up activity listeners to reset inactivity timer
   useEffect(() => {
     if (!token || !user) return;
 
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-    const resetTimer = () => resetInactivityTimer();
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    const handleUserActivity = () => resetInactivityTimer();
 
-    events.forEach(event => {
-      document.addEventListener(event, resetTimer, true);
+    // Add event listeners for user activity
+    activityEvents.forEach(event => {
+      document.addEventListener(event, handleUserActivity, true);
     });
 
+    // Cleanup event listeners on unmount
     return () => {
-      events.forEach(event => {
-        document.removeEventListener(event, resetTimer, true);
+      activityEvents.forEach(event => {
+        document.removeEventListener(event, handleUserActivity, true);
       });
     };
   }, [token, user]);
@@ -88,14 +94,29 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
     startInactivityTimer();
   };
 
-  const register = async (email: string, password: string) => {
-    const response = await api.post("/auth/register/", { email, password });
+  const register = async (email: string, password: string, first_name?: string, last_name?: string) => {
+    const response = await api.post("/auth/register/", { 
+      email, 
+      password, 
+      first_name: first_name || '', 
+      last_name: last_name || '' 
+    });
     const { access, refresh, user } = response.data;
     setToken(access);
     setUser(user);
     localStorage.setItem("access", access);
     if (refresh) localStorage.setItem("refresh", refresh);
     startInactivityTimer();
+  };
+
+  const updateUser = async () => {
+    if (!token) return;
+    try {
+      const response = await api.get("/auth/me/");
+      setUser(response.data);
+    } catch (error) {
+      console.error('Failed to update user data:', error);
+    }
   };
 
   const logout = () => {
@@ -107,7 +128,7 @@ export const AuthProvider: React.FC<Props> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, initializing, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, initializing, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
