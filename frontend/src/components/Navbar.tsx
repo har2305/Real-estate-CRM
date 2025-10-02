@@ -46,6 +46,12 @@ export default function Navbar() {
               Analytics
             </NavLink>
             <NavLink
+              to="/deleted-leads"
+              className={({ isActive }) => `${linkBase} ${isActive ? active : ""}`}
+            >
+              Deleted Leads
+            </NavLink>
+            <NavLink
               to="/profile"
               className={({ isActive }) => `${linkBase} ${isActive ? active : ""}`}
             >

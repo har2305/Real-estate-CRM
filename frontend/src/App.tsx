@@ -13,6 +13,7 @@ import LeadDetail from "./pages/LeadDetail";
 import LeadForm from "./pages/LeadForm";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
+import DeletedLeads from "./pages/DeletedLeads";
 
 function App() {
   return (
@@ -40,6 +41,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Analytics />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/deleted-leads"
+              element={
+                <ProtectedRoute>
+                  <DeletedLeads />
                 </ProtectedRoute>
               }
             />

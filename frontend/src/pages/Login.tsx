@@ -1,4 +1,3 @@
-import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../auth/useAuth";
 import { useForm } from "react-hook-form";
@@ -47,7 +46,13 @@ export default function Login() {
                 id="email"
                 type="email"
                 placeholder="you@example.com"
-                {...register("email", { required: "Email is required" })}
+                {...register("email", { 
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address"
+                  }
+                })}
               />
               {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email.message}</p>}
             </div>
@@ -58,7 +63,13 @@ export default function Login() {
                 id="password"
                 type="password"
                 placeholder="••••••••"
-                {...register("password", { required: "Password is required" })}
+                {...register("password", { 
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Min 6 characters"
+                  }
+                })}
               />
               {errors.password && (
                 <p className="text-xs text-red-400 mt-1">{errors.password.message}</p>

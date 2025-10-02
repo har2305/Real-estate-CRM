@@ -49,39 +49,31 @@ export default function Analytics() {
       try {
         setLoading(true);
         
-        // Fetch leads for stats
-        const leadsRes = await api.get("/leads/");
-        const leads = Array.isArray(leadsRes.data) ? leadsRes.data : leadsRes.data.results || [];
+        // Use dedicated analytics endpoint (no pagination issues)
+        const analyticsRes = await api.get("/analytics/");
+        const analyticsData = analyticsRes.data;
         
-        // Calculate stats
-        const byStatus: Record<string, number> = {};
-        leads.forEach((lead: any) => {
-          const status = lead.status || 'new';
-          byStatus[status] = (byStatus[status] || 0) + 1;
-        });
+        // Debug logging
+        console.log("Analytics API Response:", analyticsData);
+        console.log("Total leads:", analyticsData.leads.total);
+        console.log("Status breakdown:", analyticsData.leads.by_status);
         
         setStats({
-          total: leads.length,
-          by_status: byStatus
+          total: analyticsData.leads.total,
+          by_status: analyticsData.leads.by_status
         });
 
-        // Fetch recent activities
-        try {
-          const activitiesRes = await api.get("/activities/recent/");
-          const activities = activitiesRes.data || [];
-          // Ensure each activity has the expected structure
-          const safeActivities = activities.map((activity: any) => ({
-            ...activity,
-            lead: activity.lead || { first_name: '', last_name: '', full_name: '' },
-            user: activity.user || { username: 'Unknown' }
-          }));
-          setRecentActivities(safeActivities);
-        } catch (activitiesErr) {
-          console.warn("Failed to fetch recent activities:", activitiesErr);
-          setRecentActivities([]);
-        }
+        // Set recent activities
+        const activities = analyticsData.recent_activities || [];
+        const safeActivities = activities.map((activity: any) => ({
+          ...activity,
+          lead: activity.lead || { first_name: '', last_name: '', full_name: '' },
+          user: activity.user || { username: 'Unknown' }
+        }));
+        setRecentActivities(safeActivities);
         
       } catch (err) {
+        console.error("Analytics error:", err);
         const ax = err as AxiosError<{ detail?: string }>;
         setError(ax.response?.data?.detail ?? "Failed to load analytics");
       } finally {
