@@ -5,7 +5,7 @@ import Spinner from "../components/ui/Spinner";
 import Button from "../components/ui/Button";
 import Alert from "../components/ui/Alert";
 import StatusBadge from "../components/ui/StatusBadge";
-import { Card, CardContent, CardHeader } from "../components/ui/Card";
+import { Card, CardContent } from "../components/ui/Card";
 import type { AxiosError } from "axios";
 
 interface Lead {
