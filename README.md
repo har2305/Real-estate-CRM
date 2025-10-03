@@ -1,4 +1,4 @@
-# Real Estate CRM
+# Real Estate CRM app
 
 A modern, full-stack Customer Relationship Management system built specifically for real estate professionals. Manage leads, track activities, and analyze your sales pipeline with an intuitive web interface.
 
@@ -316,5 +316,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Built with ❤️ for real estate professionals**T r i g g e r i n g   V e r c e l   r e d e p l o y  
+**Built with ❤️ for real estate professionals**T r i g g e r i n g   V e r c e l   r e d e p l o y 
+ 
  
