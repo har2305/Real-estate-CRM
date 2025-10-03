@@ -1,8 +1,6 @@
-# Real Estate CRM app
+# Real Estate CRM
 
 A modern, full-stack Customer Relationship Management system built specifically for real estate professionals. Manage leads, track activities, and analyze your sales pipeline with an intuitive web interface.
-
-<!-- Deployment trigger -->
 
 ## 🏠 Features
 
@@ -19,7 +17,7 @@ A modern, full-stack Customer Relationship Management system built specifically 
 ### Backend
 - **Django 5.2** - Python web framework
 - **Django REST Framework** - API development
-- **SQLite** - Database (easily switchable to PostgreSQL/MySQL)
+- **PostgreSQL** - Production database
 - **JWT Authentication** - Secure token-based auth
 - **Pytest** - Testing framework
 
@@ -32,6 +30,16 @@ A modern, full-stack Customer Relationship Management system built specifically 
 - **Axios** - HTTP client for API calls
 - **Jest** - Testing framework
 
+## 🌐 Live Demo
+
+### Production URLs
+- **Frontend**: https://real-estate-crm-frontend-eta.vercel.app
+- **Backend API**: https://real-estate-crm-backend-e5ep.onrender.com/api
+
+### Test Credentials
+- **Email**: `test@test.com`
+- **Password**: `testpass123`
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -41,7 +49,7 @@ A modern, full-stack Customer Relationship Management system built specifically 
 
 ### 1. Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/har2305/Real-estate-CRM.git
 cd Real-estate-CRM
 ```
 
@@ -191,14 +199,14 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 
 ## 🚀 Deployment
 
-### Quick Deployment (Recommended for Assignment)
+### Quick Deployment (Production Ready)
 
 **Backend (Render):**
 1. Create PostgreSQL database on [render.com](https://render.com)
 2. Create Web Service with:
    - Build Command: `./build.sh`
    - Start Command: `gunicorn backend.wsgi:application`
-   - Environment Variables: `SECRET_KEY`, `DEBUG=False`, `DATABASE_URL`, `CORS_ALLOWED_ORIGINS`
+   - Environment Variables: `SECRET_KEY`, `DEBUG=False`, `DATABASE_URL`
 
 **Frontend (Vercel):**
 1. Import repository to [vercel.com](https://vercel.com)
@@ -206,21 +214,6 @@ ALLOWED_HOSTS=localhost,127.0.0.1
 3. Environment Variable: `VITE_API_URL=https://your-backend.onrender.com/api`
 
 📖 **Detailed deployment guide**: See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
-
-### Production Setup (Manual)
-1. **Set up production database** (PostgreSQL recommended)
-2. **Configure environment variables**
-3. **Set DEBUG=False** in settings
-4. **Collect static files**: `python manage.py collectstatic`
-5. **Use production WSGI server** (Gunicorn, uWSGI)
-6. **Set up reverse proxy** (Nginx, Apache)
-7. **Configure SSL certificates**
-
-### Docker Deployment (Optional)
-```bash
-# Build and run with Docker Compose
-docker-compose up -d
-```
 
 ## 🔒 Security Features
 
@@ -290,20 +283,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Ensure API endpoints are accessible
 
 ### Getting Help
-- Check the [Issues](https://github.com/your-repo/issues) page
+- Check the [Issues](https://github.com/har2305/Real-estate-CRM/issues) page
 - Review the documentation
 - Contact the development team
-
-## 🌐 Live Demo
-
-### Demo Credentials
-- **Username**: `demo@example.com`
-- **Password**: `demo123456`
-
-### Production URLs
-- **Frontend**: `https://your-frontend.vercel.app`
-- **Backend API**: `https://your-backend.onrender.com/api/`
-- **Admin Panel**: `https://your-backend.onrender.com/admin/`
 
 ## 🎯 Roadmap
 
@@ -318,6 +300,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Built with ❤️ for real estate professionals**T r i g g e r i n g   V e r c e l   r e d e p l o y 
- 
- 
+**Built with ❤️ for real estate professionals**
