@@ -12,4 +12,8 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'https://real-estate-crm-backend-e5ep.onrender.com/api'),
+  },
+
 })
