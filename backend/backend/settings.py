@@ -61,13 +61,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-# CORS Settings
-CORS_ALLOWED_ORIGINS = config(
-    'CORS_ALLOWED_ORIGINS', 
-    default='http://localhost:5173,http://127.0.0.1:5173'
-).split(',')
-
-# Allow all origins for production (since Vercel generates new URLs)
+# CORS Settings - Allow all origins for production (since Vercel generates new URLs)
 CORS_ALLOW_ALL_ORIGINS = True
 ROOT_URLCONF = 'backend.urls'
 
