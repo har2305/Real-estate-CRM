@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  // Force proxy usage to avoid host mismatches (127.0.0.1 vs localhost)
-  baseURL: '/api',
+  // Use environment variable for production, fallback to localhost for development
+  baseURL: import.meta.env.VITE_API_URL || 'https://real-estate-crm-backend-e5ep.onrender.com/api',
 });
 
 // Flag to prevent multiple refresh attempts
