@@ -316,4 +316,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Built with ❤️ for real estate professionals**
+**Built with ❤️ for real estate professionals**T r i g g e r i n g   V e r c e l   r e d e p l o y  
+ 
