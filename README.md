@@ -287,17 +287,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Review the documentation
 - Contact the development team
 
-## 🎯 Roadmap
-
-- [ ] Email integration for lead notifications
-- [ ] Calendar integration for meeting scheduling
-- [ ] Document upload and management
-- [ ] Advanced reporting and analytics
-- [ ] Mobile app development
-- [ ] Multi-tenant support
-- [ ] API rate limiting
-- [ ] Automated lead scoring
-
 ---
 
 **Built with ❤️ for real estate professionals**
