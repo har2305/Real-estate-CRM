@@ -2,6 +2,8 @@
 
 A modern, full-stack Customer Relationship Management system built specifically for real estate professionals. Manage leads, track activities, and analyze your sales pipeline with an intuitive web interface.
 
+<!-- Deployment trigger -->
+
 ## 🏠 Features
 
 - **Lead Management**: Create, edit, and track real estate leads
